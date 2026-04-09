@@ -2,7 +2,6 @@ package webserver;
 
 import java.io.*;
 import java.net.Socket;
-
 import fileIO.FileLoader;
 import http.MyHttpRequest;
 import http.MyHttpRequestParser;
@@ -24,14 +23,14 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream();
-             OutputStream out =connection.getOutputStream()) {
+             OutputStream out = connection.getOutputStream()) {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
 
 
             MyHttpRequest newRequest = MyHttpRequestParser.parse(in);
             MyHttpResponse newResponse = new MyHttpResponse(out);
-            logger.debug("MyHttpRequest is null? : {}", newRequest== null);
-            if(newRequest == null) return;
+            logger.debug("MyHttpRequest is null? : {}", newRequest == null);
+            if (newRequest == null) return;
 
             logger.debug("Body Generating");
             byte[] body = handleRequest(newRequest, newResponse);
@@ -43,20 +42,19 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private byte[] handleRequest(MyHttpRequest request, MyHttpResponse response){
+    private byte[] handleRequest(MyHttpRequest request, MyHttpResponse response) {
         String url = "";
-        if(request.getMethod().equals("GET")){
+        if (request.getMethod().equals("GET")) {
             url = getHandlerResolver(request, response);
         }
         return viewResolver(url);
     }
 
     private byte[] viewResolver(String url) {
-        if(url.contains("static")){
-            try{
+        if (url.contains("static")) {
+            try {
                 return FileLoader.getStaticFile(url);
-            }
-            catch(IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -65,61 +63,34 @@ public class RequestHandler implements Runnable {
 
     private String getHandlerResolver(MyHttpRequest request, MyHttpResponse response) {
         String url = request.getUrl();
-        logger.debug("GetRequest received for : {}" ,url);
+        logger.debug("GetRequest received for : {}", url);
         String retUrl = "";
-        if(url.equals("/")){
+        if (url.equals("/")) {
             retUrl = "/static/index.html";
-        }
-        else if(url.contains("css")){
-            response.setHeader("Content-Type","text/css;charset=utf-8");
+        } else if (url.contains("css")) {
+            response.setHeader("Content-Type", "text/css;charset=utf-8");
+            retUrl = "/static/" + url;
+        } else if (url.contains("js")) {
+            response.setHeader("Content-Type", "application/javascript;charset=utf-8");
+            retUrl = "/static/" + url;
+        } else if (url.contains("ico")) {
+            response.setHeader("Content-Type", "image/x-icon");
+            retUrl = "/static/" + url;
+        } else if (url.contains("png")) {
+            response.setHeader("Content-Type", "image/png");
+            retUrl = "/static/" + url;
+        } else if (url.contains("jpg") || url.contains("jpeg")) {
+            response.setHeader("Content-Type", "image/jpeg");
+            retUrl = "/static/" + url;
+        } else if (url.contains("svg")) {
+            response.setHeader("Content-Type", "image/svg+xml");
             retUrl = "/static/" + url;
         }
-        else if(url.contains("js")){
-            response.setHeader("Content-Type","application/javascript;charset=utf-8");
-            retUrl = "/static/" + url;
-        }
-        else if(url.contains("ico")){
-            response.setHeader("Content-Type","image/x-icon");
-            retUrl = "/static/" + url;
-        }
-        else{
-            retUrl =  "/static/index.html";
+        else {
+            retUrl = "/static/index.html";
         }
 
         return retUrl;
     }
-
-
-
-    private String convertRequestToString(InputStream in) throws IOException {
-        try(BufferedReader bs = new BufferedReader( new InputStreamReader(in)))
-        {
-            StringBuilder sb = new StringBuilder();
-            String s;
-            while((s = bs.readLine()) != null){
-                sb.append(s);
-            }
-            return sb.toString();
-        }
-    }
-
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
 }
+

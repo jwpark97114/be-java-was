@@ -13,7 +13,6 @@ import java.util.List;
 public class MyHttpRequestParser {
     private static final Logger logger = LoggerFactory.getLogger(MyHttpRequestParser.class);
     public static MyHttpRequest parse(InputStream is) throws IOException {
-        logger.debug("Parsing Initiated for {}", Thread.currentThread().getName());
         BufferedInputStream bis = new BufferedInputStream(is);
             List<String> headers = new ArrayList<>();
             StringBuilder lineBuilder = new StringBuilder();
@@ -41,8 +40,8 @@ public class MyHttpRequestParser {
             MyHttpRequest request = new MyHttpRequest(headers);
             String contentLengthString = request.getHeader("Content-Length");
             if(contentLengthString != null){
-                int length = Integer.parseInt(request.getHeader(contentLengthString.strip()));
-                byte[] body = is.readNBytes(length);
+                int length = Integer.parseInt(contentLengthString.strip());
+                byte[] body = bis.readNBytes(length);
                 request.setBody(body);
             }
 //            logger.debug("{}: MyHttpParser Complete",Thread.currentThread().getName());

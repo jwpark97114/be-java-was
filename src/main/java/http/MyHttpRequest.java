@@ -21,11 +21,11 @@ public class MyHttpRequest {
         fillMethodLine(headers.get(0));
 
         for(int i = 1; i < headers.size(); i++){
-            praseHeader(headers.get(i));
+            parseHeader(headers.get(i));
         }
     }
 
-    private void praseHeader(String line) throws InvalidParameterException{
+    private void parseHeader(String line) throws InvalidParameterException{
         if(line.contains(":")){
             String[] splitResult = line.split(":",2);
             if(splitResult.length != 2){

@@ -1,5 +1,8 @@
 package http;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.security.InvalidParameterException;
 import java.util.*;
 
@@ -9,6 +12,7 @@ public class MyHttpRequest {
     private byte[] body;
     private Map<String, String> header = new HashMap<>();
     private final Map<String, String> params = new HashMap<>();
+    private static final Logger logger = LoggerFactory.getLogger(MyHttpRequest.class);
 
     public MyHttpRequest(List<String> headers){
 

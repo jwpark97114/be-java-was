@@ -6,6 +6,7 @@ import java.net.Socket;
 import fileIO.FileLoader;
 import http.MyHttpRequest;
 import http.MyHttpRequestParser;
+import http.MyHttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,24 +27,26 @@ public class RequestHandler implements Runnable {
              OutputStream out =connection.getOutputStream()) {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
 
+
             MyHttpRequest newRequest = MyHttpRequestParser.parse(in);
+            MyHttpResponse newResponse = new MyHttpResponse(out);
+            logger.debug("MyHttpRequest is null? : {}", newRequest== null);
             if(newRequest == null) return;
 
-            byte[] body = handleRequest(newRequest);
-
-            DataOutputStream dos = new DataOutputStream(out);
-//            byte[] body = "<h1>Hello World</h1>".getBytes();
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+            logger.debug("Body Generating");
+            byte[] body = handleRequest(newRequest, newResponse);
+            newResponse.setResponseBody(body);
+            newResponse.send();
         } catch (IOException e) {
+            logger.debug("IO EXCEPTION POPPED");
             logger.error(e.getMessage());
         }
     }
 
-    private byte[] handleRequest(MyHttpRequest request){
+    private byte[] handleRequest(MyHttpRequest request, MyHttpResponse response){
         String url = "";
         if(request.getMethod().equals("GET")){
-            url = getHandlerResolver(request);
+            url = getHandlerResolver(request, response);
         }
         return viewResolver(url);
     }
@@ -60,15 +63,30 @@ public class RequestHandler implements Runnable {
         return null;
     }
 
-    private String getHandlerResolver(MyHttpRequest request) {
+    private String getHandlerResolver(MyHttpRequest request, MyHttpResponse response) {
         String url = request.getUrl();
         logger.debug("GetRequest received for : {}" ,url);
+        String retUrl = "";
         if(url.equals("/")){
-            return "/static/index.html";
+            retUrl = "/static/index.html";
+        }
+        else if(url.contains("css")){
+            response.setHeader("Content-Type","text/css;charset=utf-8");
+            retUrl = "/static/" + url;
+        }
+        else if(url.contains("js")){
+            response.setHeader("Content-Type","application/javascript;charset=utf-8");
+            retUrl = "/static/" + url;
+        }
+        else if(url.contains("ico")){
+            response.setHeader("Content-Type","image/x-icon");
+            retUrl = "/static/" + url;
         }
         else{
-            return "/static/" + url;
+            retUrl =  "/static/index.html";
         }
+
+        return retUrl;
     }
 
 

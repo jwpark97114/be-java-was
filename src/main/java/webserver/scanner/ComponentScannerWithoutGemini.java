@@ -24,6 +24,7 @@ public class ComponentScannerWithoutGemini {
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
         Map<String, HandlerMethod> result = new HashMap<>();
 
+        // TODO : WHAT IF THE URL IS NOT FILE BUT JAR? ("jar".equals(r.getProtocol()))
         URL r = cl.getResource(targetPackage);
         if(r == null){
             throw new IOException("NO SUCH PACKAGE EXISTS");

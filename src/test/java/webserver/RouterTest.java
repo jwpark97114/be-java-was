@@ -2,8 +2,8 @@ package webserver;
 
 import org.junit.jupiter.api.Test;
 import interfaces.HandlerMethod;
-import http.MyHttpRequest;
-import http.MyHttpResponse;
+import http.HttpRequest;
+import http.HttpResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,8 +26,8 @@ class RouterTest {
 
         // NOTE: You will need to create dummy instances of MyHttpRequest and MyHttpResponse here.
         // Assuming you have a way to manually construct them for tests:
-        MyHttpRequest mockRequest = new MyHttpRequest(List.of("GET /test HTTP/1.1"));
-        MyHttpResponse mockResponse = new MyHttpResponse(null);
+        HttpRequest mockRequest = new HttpRequest(List.of("GET /test HTTP/1.1"));
+        HttpResponse mockResponse = new HttpResponse(null);
 
         // 2. Act: Tell the router to handle it
         router.handleRequest(mockRequest, mockResponse);

@@ -1,6 +1,6 @@
 package webserver.scanner;
 
-import annotations.MyRequestMapping;
+import annotations.RequestMapping;
 import interfaces.HandlerMethod;
 
 import java.io.*;
@@ -53,8 +53,8 @@ public class ComponentScannerWithoutGemini {
 
                 Method[] methods = c.getDeclaredMethods();
                 for (Method m : methods) {
-                    if (m.isAnnotationPresent(MyRequestMapping.class)) {
-                        MyRequestMapping annotation = m.getAnnotation(MyRequestMapping.class);
+                    if (m.isAnnotationPresent(RequestMapping.class)) {
+                        RequestMapping annotation = m.getAnnotation(RequestMapping.class);
                         String method = annotation.method();
                         String url = annotation.path();
 

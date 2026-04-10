@@ -1,9 +1,9 @@
 package webserver.handlers;
 
-import annotations.MyRequestMapping;
+import annotations.RequestMapping;
 import fileIO.FileLoader;
-import http.MyHttpRequest;
-import http.MyHttpResponse;
+import http.HttpRequest;
+import http.HttpResponse;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,8 +14,8 @@ public class RegistrationHandlers {
     private static final Logger logger = LoggerFactory.getLogger(RegistrationHandlers.class);
 
 
-    @MyRequestMapping(method = "GET", path = "/registration")
-    public void getRegistrationPage(MyHttpRequest request, MyHttpResponse response) throws IOException{
+    @RequestMapping(method = "GET", path = "/registration")
+    public void getRegistrationPage(HttpRequest request, HttpResponse response) throws IOException{
         response.setStatus("200 OK");
         response.setHeader("Content-Type","text/html;charset=utf-8");
         byte[] body = FileLoader.getStaticFile("/registration/index.html");
@@ -24,8 +24,8 @@ public class RegistrationHandlers {
         response.send();
     }
 
-    @MyRequestMapping(method = "GET", path ="/create")
-    public void getCreateUserAccount(MyHttpRequest request, MyHttpResponse response) throws IOException{
+    @RequestMapping(method = "GET", path ="/create")
+    public void getCreateUserAccount(HttpRequest request, HttpResponse response) throws IOException{
         String userId = request.getParam("userID");
         String nickname = request.getParam("nickname");
         String email = request.getParam("email");

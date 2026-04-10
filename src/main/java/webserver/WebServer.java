@@ -15,6 +15,7 @@ import interfaces.HandlerMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.scanner.ComponentScanner;
+import webserver.scanner.ComponentScannerWithoutGemini;
 
 public class WebServer {
     private static final Logger logger = LoggerFactory.getLogger(WebServer.class);
@@ -25,7 +26,8 @@ public class WebServer {
 
 
     public static void main(String args[]) throws Exception {
-        Map<String, HandlerMethod> dynamicHandlers = ComponentScanner.scanHandlers("webserver.handlers");
+//        Map<String, HandlerMethod> dynamicHandlers = ComponentScanner.scanHandlers("webserver.handlers");
+        Map<String, HandlerMethod> dynamicHandlers = ComponentScannerWithoutGemini.loadHandlers("webserver/handlers");
         Router router = new Router(dynamicHandlers);
 
         int port = 0;

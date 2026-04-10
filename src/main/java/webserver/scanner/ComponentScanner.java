@@ -1,8 +1,6 @@
 package webserver.scanner;
 
 import annotations.MyRequestMapping;
-import http.MyHttpRequest;
-import http.MyHttpResponse;
 import interfaces.HandlerMethod;
 
 import java.io.File;

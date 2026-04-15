@@ -20,21 +20,12 @@ public class LoginHandlers {
 
     @RequestMapping(method = "GET", path ="/login")
     public void getLoginPage(HttpRequest request, HttpResponse response) throws IOException {
-
-        response.setStatus("200 OK");
-        response.setHeader("Content-Type", MimeTypeParser.MimeType.HTML.getContentType());
-        byte[] body = FileLoader.getStaticFile("/login/index.html");
-        response.setHeader("Content-Length",String.valueOf(body.length));
-        response.setResponseBody(body);
-        response.send();
-
+        response.sendHtml("/login/index.html");
     }
 
     @RequestMapping(method = "POST", path ="/login")
     public void postLoginRequest(HttpRequest request, HttpResponse response) throws IOException {
-
         logger.info("User Login - User : {}", request.getBodyParam("userID"));
-
     }
 
 }

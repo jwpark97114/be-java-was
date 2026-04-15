@@ -20,12 +20,7 @@ public class RegistrationHandlers {
 
     @RequestMapping(method = "GET", path = "/registration")
     public void getRegistrationPage(HttpRequest request, HttpResponse response) throws IOException{
-        response.setStatus("200 OK");
-        response.setHeader("Content-Type", MimeTypeParser.MimeType.HTML.getContentType());
-        byte[] body = FileLoader.getStaticFile("/registration/index.html");
-        response.setHeader("Content-Length",String.valueOf(body.length));
-        response.setResponseBody(body);
-        response.send();
+        response.sendHtml("/registration/index.html");
     }
 
     @RequestMapping(method = "POST", path ="/create")
@@ -37,18 +32,14 @@ public class RegistrationHandlers {
         String password = request.getBodyParam("password");
 
         if(userId==null || nickname==null || email==null|| password==null){
-            response.setStatus("302 Found");
-            response.setHeader("Location","/registration");
-            response.send();
+            response.sendRedirect("/registration");
         }
         else{
             String hashedPW = hashPassword(password);
             User user = new User(userId,hashedPW,nickname,email);
             Database.addUser(user);
             logger.debug("NEW USER : {}",user );
-            response.setStatus("302 Found");
-            response.setHeader("Location","/");
-            response.send();
+            response.sendRedirect("/");
         }
 
     }

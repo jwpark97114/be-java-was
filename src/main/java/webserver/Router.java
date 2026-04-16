@@ -33,7 +33,7 @@ public class Router {
             returnStaticFiles(request,response);
             return;
         }
-        h.handle(request, response);
+        h.handle(request, response, sessionManager);
     }
 
     private void returnStaticFiles(HttpRequest request, HttpResponse response) {

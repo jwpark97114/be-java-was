@@ -105,13 +105,26 @@ public class HttpRequest {
         String bodyString = new String(this.body);
         String[] kvPairs = bodyString.split("&");
         for(String kvPair : kvPairs){
-            String[] keyVal = kvPair.split("=");
+            String[] keyVal = kvPair.split("=",2);
             if(keyVal.length != 2){
                 return;
             }
             this.bodyParams.put(URLDecoder.decode(keyVal[0], StandardCharsets.UTF_8),URLDecoder.decode(keyVal[1], StandardCharsets.UTF_8));
         }
 
+    }
+
+    public String getSessionID(){
+        String cookieString = this.header.get("Cookie");
+        if(cookieString == null) return "";
+        String[] cookies = cookieString.split(";");
+        for(String cookie : cookies){
+            if(cookie.contains("SID=")){
+                String[] crumbs = cookie.split("=",2);
+                return crumbs[1].strip();
+            }
+        }
+        return "";
     }
 
     public String getBodyParam(String key){

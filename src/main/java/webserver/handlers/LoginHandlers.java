@@ -9,6 +9,7 @@ import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.session.Session;
+import webserver.session.SessionManager;
 
 
 import java.io.IOException;
@@ -26,24 +27,26 @@ public class LoginHandlers {
     }
 
     @RequestMapping(method = "POST", path ="/login")
-    public void postLoginRequest(HttpRequest request, HttpResponse response) throws IOException {
+    public void postLoginRequest(HttpRequest request, HttpResponse response, SessionManager sessionManager) throws IOException {
         String id = request.getBodyParam("userID");
         String password = request.getBodyParam("password");
         User possibleUser = Database.findUserById(id);
 
         if(id.isEmpty() || password.isEmpty() || possibleUser == null){
-            response.sendRedirect("/login/index.html");
+            response.sendRedirect("/login/failed.html");
             return;
         }
 
         if(!checkPassword(possibleUser.getPassword(), password)){
-            response.sendRedirect("/login/index.html");
+            response.sendRedirect("/login/failed.html");
             return;
         }
 
-
-
-
+        Session newSession = sessionManager.createNewSession();
+        logger.info("New Session in Memory  SID = {}", newSession.getId());
+        newSession.addAttribute("user",possibleUser);
+        response.setHeader("Set-Cookie", "SID="+newSession.getId()+";"+" Path=/; Max-Age=300; HttpOnly");
+        response.sendRedirect("/");
     }
 
 }

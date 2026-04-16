@@ -2,6 +2,7 @@ package webserver.scanner;
 
 import annotations.RequestMapping;
 import interfaces.HandlerMethod;
+import webserver.session.Session;
 
 import java.io.*;
 
@@ -65,7 +66,7 @@ public class ComponentScannerWithoutGemini {
                         Class<?>[] params = m.getParameterTypes();
                         Object[] args = new Object[params.length];
 
-                        HandlerMethod h = (req, res) -> {
+                        HandlerMethod h = (req, res, sessionManager) -> {
                             for(int i=0; i < params.length; i++){
                                 if(params[i].getSimpleName().equals("HttpRequest")){
                                     args[i] = req;
@@ -74,7 +75,9 @@ public class ComponentScannerWithoutGemini {
                                     args[i] = res;
                                 }
                                 else if(params[i].getSimpleName().equals("Session")){
-                                    args[i] = req.getSession();
+                                    String sid = req.getSessionID();
+                                    Session session = sessionManager.getSession(sid);
+                                    args[i] = session;
                                 }
                                 else if(params[i].getSimpleName().equals("SessionManager")){
                                     args[i] = req.getSessionManager();

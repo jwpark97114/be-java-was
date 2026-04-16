@@ -17,18 +17,11 @@ public class MimeTypeParser {
         PNG("png",  "image/png"),
         JPG("jpg",  "image/jpeg"),
         JPEG("jpeg", "image/jpeg"),
-        SVG("svg",  "image/svg+xml");
+        SVG("svg",  "image/svg+xml"),
+        OCTET("bin","application/octet-stream");
 
         private String contentType;
         private String fileExtension;
-
-        private static final Map<String, MimeType> extensionMap = new HashMap<>();
-
-        static{
-            for(MimeType m : MimeType.values()){
-                extensionMap.put(m.fileExtension,m);
-            }
-        }
 
         private MimeType(String fileExtension, String contentType){
             this.fileExtension = fileExtension;
@@ -39,11 +32,16 @@ public class MimeTypeParser {
             if(extension == null){
                 return "application/octet-stream";
             }
-            MimeType m = extensionMap.get(extension.toLowerCase());
-            if(m != null){
-                return m.contentType;
+
+            MimeType retMimeType = OCTET;
+            for(MimeType m : MimeType.values()){
+                if(extension.equals(m.getFileExtension())){
+                    retMimeType = m;
+                }
             }
-            return "application/octet-stream";
+
+
+            return retMimeType.getContentType();
 
         }
 

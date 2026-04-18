@@ -22,7 +22,7 @@ public class RegistrationHandlers {
     }
 
     @RequestMapping(method = "POST", path ="/create")
-    public void postCreateUserAccount(HttpRequest request, HttpResponse response) throws IOException{
+    public void postCreateUserAccount(HttpRequest request, HttpResponse response){
 
         String userId = request.getBodyParam("userID");
         String nickname = request.getBodyParam("nickname");

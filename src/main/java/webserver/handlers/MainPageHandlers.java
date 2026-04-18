@@ -17,7 +17,7 @@ public class MainPageHandlers {
     private static final Logger logger = LoggerFactory.getLogger(MainPageHandlers.class);
 
     @RequestMapping(method = "GET", path = "/")
-    public String getFrontPage(HttpRequest request, HttpResponse response, Session session, TemplateAttributes templateAttributes) throws IOException {
+    public String getFrontPage(Session session, TemplateAttributes templateAttributes) {
         if(session != null){
             templateAttributes.setAttribute("userID", ((User)session.getAttribute("user")).getName());
         }
@@ -29,6 +29,7 @@ public class MainPageHandlers {
         String sessionID = request.getSessionID();
         sessionManager.removeSession(sessionID);
         response.setSessionInvalidateHeader(sessionID);
+
         response.sendRedirect("/");
         return null;
     }

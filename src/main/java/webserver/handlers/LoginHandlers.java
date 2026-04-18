@@ -2,10 +2,8 @@ package webserver.handlers;
 
 import annotations.RequestMapping;
 import db.Database;
-import fileIO.FileLoader;
 import jhttp.HttpRequest;
 import jhttp.HttpResponse;
-import model.TemplateAttributes;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +27,7 @@ public class LoginHandlers {
     }
 
     @RequestMapping(method = "POST", path ="/login")
-    public String postLoginRequest(HttpRequest request, HttpResponse response, SessionManager sessionManager) throws IOException {
+    public String postLoginRequest(HttpRequest request, HttpResponse response, SessionManager sessionManager) {
         String id = request.getBodyParam("userID");
         String password = request.getBodyParam("password");
         User possibleUser = Database.findUserById(id);
@@ -47,6 +45,7 @@ public class LoginHandlers {
         Session newSession = sessionManager.createNewSession();
         logger.info("New Session in Memory  SID = {}", newSession.getId());
         newSession.addAttribute("user",possibleUser);
+
         response.setHeader("Set-Cookie", "SID="+newSession.getId()+";"+" Path=/; Max-Age=300; HttpOnly");
         response.setStatus("302 Found");
         response.setHeader("location","/user/list");

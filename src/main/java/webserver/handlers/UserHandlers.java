@@ -18,7 +18,7 @@ public class UserHandlers {
         if(session == null){
             response.setSessionInvalidateHeader(request.getSessionID());
             response.sendRedirect("/login");
-
+            return null;
         }
         response.setStatus("200 OK");
         attributes.setAttribute("userID", ((User)session.getAttribute("user")).getUserId());

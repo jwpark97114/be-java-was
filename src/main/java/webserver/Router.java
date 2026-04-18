@@ -16,12 +16,12 @@ import java.util.Map;
 
 public class Router {
     private static final Logger logger = LoggerFactory.getLogger(Router.class);
-    private final Map<String, HandlerMethod> handlers ;
+    private final Map<String, HandlerMethod> requestHandlers;
     private final SessionManager sessionManager;
 
 
-    public Router(Map<String, HandlerMethod> injectedHandlers, SessionManager sm){
-        this.handlers = injectedHandlers;
+    public Router(Map<String, HandlerMethod> injectedRequestHandlers, SessionManager sm){
+        this.requestHandlers = injectedRequestHandlers;
         this.sessionManager = sm;
     }
 
@@ -29,7 +29,7 @@ public class Router {
         logger.info("{} requested for - {}", request.getMethod(), request.getUrl());
         String signature = extractSignature(request);
         TemplateAttributes templateAttributes = new TemplateAttributes();
-        HandlerMethod h = handlers.get(signature);
+        HandlerMethod h = requestHandlers.get(signature);
         if(h == null){
             returnStaticFiles(request,response);
             return;

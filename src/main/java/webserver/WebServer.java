@@ -24,10 +24,10 @@ public class WebServer {
 
 
     public static void main(String args[]) throws Exception {
-//        Map<String, HandlerMethod> dynamicHandlers = ComponentScanner.scanHandlers("webserver.handlers");
-        Map<String, HandlerMethod> dynamicHandlers = ComponentScannerWithoutGemini.loadHandlers("webserver/handlers");
+//        Map<String, HandlerMethod> handlerMethodMap = ComponentScanner.scanHandlers("webserver.handlers");
+        Map<String, HandlerMethod> handlerMethodMap = ComponentScannerWithoutGemini.loadHandlers("webserver/handlers");
         SessionManager sessionManager = new SessionManager();
-        Router router = new Router(dynamicHandlers, sessionManager);
+        Router router = new Router(handlerMethodMap, sessionManager);
 
         int port = 0;
         if (args == null || args.length == 0) {
